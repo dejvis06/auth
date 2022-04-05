@@ -1,0 +1,12 @@
+jwt:
+  secret: 'test'
+
+spring:
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/c4bakery_auth
+    username: postgres
+    password:
+
+  main:
+    allow-circular-references: true
