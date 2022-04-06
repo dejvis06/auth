@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ro.fullscreendigital.auth.customException.EmailExistsException;
-import ro.fullscreendigital.auth.customException.UsernameExistsException;
-import ro.fullscreendigital.auth.entity.User;
+import ro.fullscreendigital.auth.custom_exception.EmailExistsException;
+import ro.fullscreendigital.auth.custom_exception.UsernameExistsException;
+import ro.fullscreendigital.auth.model.entity.User;
 import ro.fullscreendigital.auth.security.util.JwtTokenUtil;
-import ro.fullscreendigital.auth.security.UserCustody;
+import ro.fullscreendigital.auth.model.security.UserCustody;
 import ro.fullscreendigital.auth.security.util.SecurityConstant;
 import ro.fullscreendigital.auth.service.UserService;
 import ro.fullscreendigital.auth.util.HttpResponse;
@@ -61,15 +61,18 @@ public class UserController {
             return new ResponseEntity<>(new HttpResponse(200, HttpStatus.OK, null, "Success", userDetails), header,
                     HttpStatus.OK);
         } catch (BadCredentialsException e) {
-
             return new ResponseEntity<>(new HttpResponse(400, HttpStatus.BAD_REQUEST, e.getMessage(), "Error", null),
                     HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
             return new ResponseEntity<>(
                     new HttpResponse(500, HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), "Error", null),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @RequestMapping(value = "/test", method = RequestMethod.POST)
+    public ResponseEntity<String> test(){
+        return new ResponseEntity<>("test", HttpStatus.OK);
     }
 
     private void authenticate(String username, String password) {

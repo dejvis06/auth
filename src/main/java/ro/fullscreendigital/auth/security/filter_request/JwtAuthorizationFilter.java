@@ -21,40 +21,38 @@ import java.util.List;
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
-		if (request.getMethod().equalsIgnoreCase(SecurityConstant.OPTIONS_HTTP_METHOD)) {
-			response.setStatus(HttpStatus.OK.value());
-		} else {
+        if (request.getMethod().equalsIgnoreCase(SecurityConstant.OPTIONS_HTTP_METHOD)) {
+            response.setStatus(HttpStatus.OK.value());
+        } else {
 
-			String authorizationheader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            String authorizationheader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            if (authorizationheader == null || !authorizationheader.startsWith(SecurityConstant.TOKEN_PREFIX)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
 
-			if (authorizationheader == null || !authorizationheader.startsWith(SecurityConstant.TOKEN_PREFIX)) {
-				filterChain.doFilter(request, response);
-				return;
-			}
+            String token = authorizationheader.substring(SecurityConstant.TOKEN_PREFIX.length());
+            String username = jwtTokenUtil.getUsername(token);
 
-			String token = authorizationheader.substring(SecurityConstant.TOKEN_PREFIX.length());
-			String username = jwtTokenUtil.getUsername(token);
+            if (!jwtTokenUtil.isTokenExpired(token)
+                    && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-			if (jwtTokenUtil.isTokenValid(token, username)
-					&& SecurityContextHolder.getContext().getAuthentication() == null) {
+                List<GrantedAuthority> authorities = jwtTokenUtil.getAuthorities(token);
 
-				List<GrantedAuthority> authorities = jwtTokenUtil.getAuthorities(token);
-
-				Authentication authentication = jwtTokenUtil.getAuthentication(username, authorities, request);
-				SecurityContextHolder.getContext().setAuthentication(authentication);
-			} else {
-				SecurityContextHolder.clearContext();
-			}
-		}
-
-		filterChain.doFilter(request, response);
-	}
+                Authentication authentication = jwtTokenUtil.getAuthentication(username, authorities, request);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else {
+                SecurityContextHolder.clearContext();
+            }
+        }
+        filterChain.doFilter(request, response);
+    }
 
 }

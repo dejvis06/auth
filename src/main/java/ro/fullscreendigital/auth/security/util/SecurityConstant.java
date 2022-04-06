@@ -20,7 +20,7 @@ public class SecurityConstant {
 
 	public static final String OPTIONS_HTTP_METHOD = "Options";
 
-	public static final String[] PUBLIC_URLS = { "/h2-console/**", "/user/login", "/user/register",
+	public static final String[] PUBLIC_URLS = { "/user/login", "/user/register",
 			"user/resetPassword/**" };
 
 	// public static final String[] PUBLIC_URLS = { "**" };

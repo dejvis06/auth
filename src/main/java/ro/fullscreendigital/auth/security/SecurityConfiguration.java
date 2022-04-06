@@ -42,7 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
          because it set 'X-Frame-Options' to 'deny'*/
         http.headers().frameOptions().disable().and().csrf().disable().cors().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-                .antMatchers("/user/getUser").access("hasAuthority('user:read')")
+                .antMatchers("/user/test").access("hasAuthority('user:read')")
                 .antMatchers(SecurityConstant.PUBLIC_URLS).permitAll().anyRequest().authenticated().and()
                 .exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler)
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint).and()

@@ -1,20 +1,21 @@
 package ro.fullscreendigital.auth.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ro.fullscreendigital.auth.customException.EmailExistsException;
-import ro.fullscreendigital.auth.customException.UsernameExistsException;
-import ro.fullscreendigital.auth.entity.User;
+import ro.fullscreendigital.auth.custom_exception.EmailExistsException;
+import ro.fullscreendigital.auth.custom_exception.UsernameExistsException;
 import ro.fullscreendigital.auth.jpa.UserRepository;
-import static ro.fullscreendigital.auth.role.Role.*;
-import ro.fullscreendigital.auth.security.UserCustody;
+import ro.fullscreendigital.auth.model.entity.User;
+import ro.fullscreendigital.auth.model.security.UserCustody;
+import ro.fullscreendigital.auth.role.Role;
 
 import javax.transaction.Transactional;
+
+import static ro.fullscreendigital.auth.role.Role.ROLE_USER;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -35,6 +36,7 @@ public class UserService implements UserDetailsService {
         if (user == null)
             throw new UsernameNotFoundException(USER_NOT_FOUND_BY_USERNAME + username);
 
+        user.setAuthorities(Role.valueOf(user.getRole()).getAuthorities());
         return new UserCustody(user);
     }
 

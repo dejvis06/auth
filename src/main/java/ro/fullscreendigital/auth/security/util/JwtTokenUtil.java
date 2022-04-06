@@ -7,9 +7,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import ro.fullscreendigital.auth.security.UserCustody;
+import ro.fullscreendigital.auth.model.security.UserCustody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -34,18 +35,13 @@ public class JwtTokenUtil {
     private Map<String, Object> getClaimsFromUser(UserCustody userCustody) {
 
         Map<String, Object> authorities = new HashMap<>();
-        for (GrantedAuthority grantedAuthority : userCustody.getAuthorities()) {
-            authorities.put(grantedAuthority.getAuthority(), grantedAuthority);
+        for (String authority : userCustody.getUser().getAuthorities()) {
+            authorities.put(authority, new SimpleGrantedAuthority(authority));
         }
         return authorities;
     }
 
-    public Boolean isTokenValid(String token, String username) {
-        final String usernameToken = getUsername(token);
-        return (usernameToken.equals(username) && !isTokenExpired(token));
-    }
-
-    private Boolean isTokenExpired(String token) {
+    public Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDate(token);
         return expiration.before(new Date());
     }
@@ -59,21 +55,21 @@ public class JwtTokenUtil {
     }
 
     public <T> T getClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = getAllClaims(token);
+        final Claims claims = getClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    private Claims getAllClaims(String token) {
+    private Claims getClaims(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
     public List<GrantedAuthority> getAuthorities(String token) {
 
-        Map<String, Object> claims = getAllClaims(token);
+        Claims claims = getClaims(token);
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-
-        claims.entrySet().forEach(claim -> {
-            grantedAuthorities.add((GrantedAuthority) claim.getValue());
+        claims.forEach((key, value) -> {
+            if (claims.get(key).getClass().equals(LinkedHashMap.class))
+                grantedAuthorities.add(new SimpleGrantedAuthority(key));
         });
         return grantedAuthorities;
     }

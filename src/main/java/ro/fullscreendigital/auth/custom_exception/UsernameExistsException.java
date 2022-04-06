@@ -1,4 +1,4 @@
-package ro.fullscreendigital.auth.customException;
+package ro.fullscreendigital.auth.custom_exception;
 
 public class UsernameExistsException extends Exception {
 

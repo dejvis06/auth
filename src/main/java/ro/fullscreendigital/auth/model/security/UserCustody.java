@@ -1,9 +1,9 @@
-package ro.fullscreendigital.auth.security;
+package ro.fullscreendigital.auth.model.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ro.fullscreendigital.auth.entity.User;
+import ro.fullscreendigital.auth.model.entity.User;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -56,5 +56,9 @@ public class UserCustody implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return user.isActive();
+	}
+
+	public User getUser() {
+		return user;
 	}
 }

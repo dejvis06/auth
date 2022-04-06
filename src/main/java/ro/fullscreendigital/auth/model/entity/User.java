@@ -1,9 +1,9 @@
-package ro.fullscreendigital.auth.entity;
+package ro.fullscreendigital.auth.model.entity;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "USER", catalog = "TEST", schema = "SPRINGSECURITYTUTORIAL")
+@Table(name = "user", catalog = "c4bakery_auth", schema = "c4bakery_auth")
 public class User {
 
 	@Id
@@ -20,6 +20,7 @@ public class User {
 
 	private boolean isNonLocked;
 
+	@Transient
 	private String[] authorities;
 
 	private String role;
