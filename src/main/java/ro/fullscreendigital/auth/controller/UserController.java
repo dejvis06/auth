@@ -8,15 +8,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ro.fullscreendigital.auth.custom_exception.EmailExistsException;
 import ro.fullscreendigital.auth.custom_exception.UsernameExistsException;
 import ro.fullscreendigital.auth.model.entity.User;
-import ro.fullscreendigital.auth.security.util.JwtTokenUtil;
 import ro.fullscreendigital.auth.model.security.UserCustody;
+import ro.fullscreendigital.auth.security.util.JwtTokenUtil;
 import ro.fullscreendigital.auth.security.util.SecurityConstant;
 import ro.fullscreendigital.auth.service.UserService;
 import ro.fullscreendigital.auth.util.HttpResponse;
@@ -32,7 +29,7 @@ public class UserController {
     @Autowired
     private JwtTokenUtil generateJwtToken;
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @PostMapping(value = "/register")
     public ResponseEntity<HttpResponse> register(@RequestBody User user) {
 
         try {
@@ -49,7 +46,7 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @PostMapping(value = "/login")
     public ResponseEntity<HttpResponse> login(@RequestBody User user) {
 
         try {
@@ -70,9 +67,14 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "/test", method = RequestMethod.POST)
-    public ResponseEntity<String> test(){
-        return new ResponseEntity<>("test", HttpStatus.OK);
+    @GetMapping(value = "/login/google")
+    public String loginGoogle() {
+        return "test";
+    }
+
+    @GetMapping(value = "/test")
+    public String test() {
+        return "test";
     }
 
     private void authenticate(String username, String password) {

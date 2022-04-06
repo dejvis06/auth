@@ -10,3 +10,14 @@ spring:
 
   main:
     allow-circular-references: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 1002196151989-e1vk0qqrr8hjcsf2v1na2i259nu5s6qh.apps.googleusercontent.com
+            clientSecret: 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
+            scope:
+              - email
+              - profile
