@@ -1,4 +1,4 @@
-package ro.fullscreendigital.auth.security.filter_request;
+package ro.fullscreendigital.auth.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;

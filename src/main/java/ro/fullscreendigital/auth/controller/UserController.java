@@ -27,7 +27,7 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private JwtTokenUtil generateJwtToken;
+    private JwtTokenUtil jwtTokenUtil;
 
     @PostMapping(value = "/register")
     public ResponseEntity<HttpResponse> register(@RequestBody User user) {
@@ -67,14 +67,9 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "/login/google")
-    public String loginGoogle() {
-        return "test";
-    }
-
     @GetMapping(value = "/test")
-    public String test() {
-        return "test";
+    public ResponseEntity<String> test() {
+        return new ResponseEntity<>("Test page", HttpStatus.OK);
     }
 
     private void authenticate(String username, String password) {
@@ -83,7 +78,7 @@ public class UserController {
 
     private HttpHeaders getHeaderWithJwt(UserCustody userCustody) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(SecurityConstant.JWT_TOKEN_HEADER, generateJwtToken.generateToken(userCustody));
+        httpHeaders.add(SecurityConstant.JWT_TOKEN_HEADER, jwtTokenUtil.generateToken(userCustody));
         return httpHeaders;
     }
 }

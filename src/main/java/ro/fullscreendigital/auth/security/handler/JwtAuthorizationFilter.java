@@ -1,4 +1,4 @@
-package ro.fullscreendigital.auth.security.filter_request;
+package ro.fullscreendigital.auth.security.handler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

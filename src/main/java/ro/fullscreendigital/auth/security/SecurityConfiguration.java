@@ -1,6 +1,5 @@
 package ro.fullscreendigital.auth.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,21 +10,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ro.fullscreendigital.auth.model.security.CustomOAuth2User;
-import ro.fullscreendigital.auth.security.filter_request.JwtAccessDeniedHandler;
-import ro.fullscreendigital.auth.security.filter_request.JwtAuthenticationEntryPoint;
-import ro.fullscreendigital.auth.security.filter_request.JwtAuthorizationFilter;
+import ro.fullscreendigital.auth.security.handler.CustomAuthenticationSuccessHandler;
+import ro.fullscreendigital.auth.security.handler.JwtAccessDeniedHandler;
+import ro.fullscreendigital.auth.security.handler.JwtAuthenticationEntryPoint;
+import ro.fullscreendigital.auth.security.handler.JwtAuthorizationFilter;
 import ro.fullscreendigital.auth.security.oauth2.CustomOAuth2UserService;
 import ro.fullscreendigital.auth.security.util.SecurityConstant;
 import ro.fullscreendigital.auth.service.UserService;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -34,18 +27,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtAuthorizationFilter jwtAuthorizationFilter;
-
     @Autowired
     private JwtAccessDeniedHandler jwtAccessDeniedHandler;
-
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private CustomOAuth2UserService oauthUserService;
+    @Autowired
+    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -65,24 +57,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .userInfoEndpoint()
                 .userService(oauthUserService)
                 .and()
-                .successHandler(new AuthenticationSuccessHandler() {
-
-                    @Override
-                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                                        Authentication authentication) throws IOException {
-                        CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
-                        System.err.println(new ObjectMapper().writeValueAsString(oauthUser));
-
-                        /*try {
-                            userService.register(new User(oauthUser.getEmail()));
-                        } catch (EmailExistsException | UsernameExistsException e) {
-                            e.printStackTrace();
-                        }*/
-                        //response.sendRedirect("/test");
-                    }
-                })
-                .and()
-                .logout().logoutSuccessUrl("/").permitAll();
+                .successHandler(customAuthenticationSuccessHandler);
+                /*.and()
+                .logout().logoutSuccessUrl("/").permitAll();*/
     }
 
     @Bean

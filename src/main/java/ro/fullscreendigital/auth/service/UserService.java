@@ -45,7 +45,9 @@ public class UserService implements UserDetailsService {
 
         validate(user.getUsername(), user.getEmail());
 
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        // TODO: handle password == null
+        if (user.getPassword() != null)
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setActive(true);
         user.setNonLocked(true);
         user.setRole(ROLE_USER.name());
@@ -60,8 +62,8 @@ public class UserService implements UserDetailsService {
         if (validateUsername(username))
             throw new UsernameExistsException(USERNAME_ALREADY_EXISTS);
 
-        if (validateEmail(email))
-            throw new EmailExistsException(EMAIL_ALREADY_EXISTS);
+        /*if (validateEmail(email))
+            throw new EmailExistsException(EMAIL_ALREADY_EXISTS);*/
     }
 
     public boolean validateUsername(String username) {
