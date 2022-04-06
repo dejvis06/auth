@@ -1,6 +1,6 @@
-package ro.fullscreendigital.auth.role;
+package ro.fullscreendigital.auth.util.role;
 
-import static ro.fullscreendigital.auth.role.Authority.*;
+import static ro.fullscreendigital.auth.util.role.Authority.*;
 
 public enum Role {
 

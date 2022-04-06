@@ -1,4 +1,4 @@
-package ro.fullscreendigital.auth.role;
+package ro.fullscreendigital.auth.util.role;
 
 public class Authority {
 

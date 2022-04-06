@@ -1,4 +1,4 @@
-package ro.fullscreendigital.auth.jpa;
+package ro.fullscreendigital.auth.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

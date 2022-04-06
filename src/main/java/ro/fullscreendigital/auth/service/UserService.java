@@ -8,14 +8,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ro.fullscreendigital.auth.custom_exception.EmailExistsException;
 import ro.fullscreendigital.auth.custom_exception.UsernameExistsException;
-import ro.fullscreendigital.auth.jpa.UserRepository;
+import ro.fullscreendigital.auth.repository.UserRepository;
 import ro.fullscreendigital.auth.model.entity.User;
 import ro.fullscreendigital.auth.model.security.UserCustody;
-import ro.fullscreendigital.auth.role.Role;
+import ro.fullscreendigital.auth.util.role.Role;
 
 import javax.transaction.Transactional;
 
-import static ro.fullscreendigital.auth.role.Role.ROLE_USER;
+import static ro.fullscreendigital.auth.util.role.Role.ROLE_USER;
 
 @Service
 public class UserService implements UserDetailsService {
