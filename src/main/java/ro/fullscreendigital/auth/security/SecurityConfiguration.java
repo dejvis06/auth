@@ -16,7 +16,6 @@ import ro.fullscreendigital.auth.security.handler.CustomAuthenticationSuccessHan
 import ro.fullscreendigital.auth.security.handler.JwtAccessDeniedHandler;
 import ro.fullscreendigital.auth.security.handler.JwtAuthenticationEntryPoint;
 import ro.fullscreendigital.auth.security.handler.JwtAuthorizationFilter;
-import ro.fullscreendigital.auth.security.oauth2.CustomOAuth2UserService;
 import ro.fullscreendigital.auth.security.util.SecurityConstant;
 import ro.fullscreendigital.auth.service.UserService;
 
@@ -32,12 +31,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     @Autowired
-    private UserService userService;
-    @Autowired
-    private CustomOAuth2UserService oauthUserService;
-    @Autowired
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
-
+    @Autowired
+    private UserService userService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -53,13 +49,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login()
-                .loginPage("/login")
-                .userInfoEndpoint()
-                .userService(oauthUserService)
-                .and()
                 .successHandler(customAuthenticationSuccessHandler);
-                /*.and()
-                .logout().logoutSuccessUrl("/").permitAll();*/
     }
 
     @Bean

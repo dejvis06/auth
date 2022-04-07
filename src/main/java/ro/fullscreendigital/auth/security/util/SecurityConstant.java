@@ -20,7 +20,7 @@ public class SecurityConstant {
 
     public static final String OPTIONS_HTTP_METHOD = "Options";
 
-    public static final String[] PUBLIC_URLS = {"/", "/user/test", "/oauth2/**", "/user/login", "/user/register"};
+    public static final String[] PUBLIC_URLS = {"/", "/oauth2/**", "/user/login", "/user/register"};
 
     // public static final String[] PUBLIC_URLS = { "**" };
 }

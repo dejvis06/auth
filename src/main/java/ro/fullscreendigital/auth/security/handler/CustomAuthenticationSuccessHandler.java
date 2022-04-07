@@ -3,15 +3,14 @@ package ro.fullscreendigital.auth.security.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import ro.fullscreendigital.auth.custom_exception.EmailExistsException;
 import ro.fullscreendigital.auth.custom_exception.UsernameExistsException;
 import ro.fullscreendigital.auth.model.entity.User;
 import ro.fullscreendigital.auth.model.security.CustomOAuth2User;
-import ro.fullscreendigital.auth.model.security.UserCustody;
 import ro.fullscreendigital.auth.security.util.JwtTokenUtil;
-import ro.fullscreendigital.auth.security.util.SecurityConstant;
 import ro.fullscreendigital.auth.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +24,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     private UserService userService;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private OAuth2AuthorizedClientRepository authorizedClientRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -35,9 +36,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         try {
             // TODO: 1. add name and surname to user entity 2. uncomment email validation
             User user = userService.register(new User(oauthUser.getEmail()));
-
-            response.setHeader(SecurityConstant.JWT_TOKEN_HEADER, jwtTokenUtil.generateToken(new UserCustody(user)));
-            response.sendRedirect("/user/test");
+            response.getWriter().write(new ObjectMapper().writeValueAsString(user));
         } catch (EmailExistsException | UsernameExistsException e) {
             e.printStackTrace();
             // TODO: change redirect for error
